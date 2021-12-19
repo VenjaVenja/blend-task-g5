@@ -39,6 +39,9 @@ const books = [
 	},
 ];
 
+localStorage.setItem('books', JSON.stringify(books));
+
+
 const root = document.getElementById('root');
 const leftDiv = document.createElement('div');
 const rightDiv = document.createElement('div');
@@ -59,7 +62,8 @@ const isertUl = document.querySelector('ul');
 rightDiv.classList.add('rightDiv');
 
 function renderMarkup() {
-    const bookMarkup = books.map(({ title, id }) =>
+   
+    const bookMarkup = JSON.parse(localStorage.getItem('books')).map(({ title, id }) =>
         `<li id='${id}'><p class="bookTitle">${title}</p>
             <button class="edit-element">Edit</button>
             <button class="delete-element">Delete</button>
@@ -80,7 +84,7 @@ function renderMarkup() {
 renderMarkup();
 function renderPreviev(event) {
     
-    const { title, author, img, plot } = books.find(element => element.title === event.currentTarget.textContent);
+    const { title, author, img, plot } = JSON.parse(localStorage.getItem('books')).find(element => element.title === event.target.textContent);
     // console.log(bookToFind);
     function bookToFindMarkup() {
         rightDiv.innerHTML = '';
@@ -97,11 +101,17 @@ function onButtonEditClick() {
 function onButtonDeletetClick(event) {
     const bookToDelete = event.currentTarget.parentNode;
     console.log(bookToDelete);
-
-    const bookToFind = books.find(element => (element.id === bookToDelete.id));
+    const localstoredeData = JSON.parse(localStorage.getItem('books'))
+    const bookToFind = localstoredeData.find(element => (element.id === bookToDelete.id));
     console.log(bookToFind.title)
     console.log(rightDiv.children[1].textContent)
     if (rightDiv.children[0].textContent === bookToFind.title) {
         rightDiv.innerHTML = '';
-        };
-}
+    };
+
+    const newData = localstoredeData.filter(element => element.id !== bookToDelete.id);
+    console.log(newData);
+    localStorage.setItem('books', JSON.stringify(newData));
+    ul.innerHTML = "";
+    renderMarkup();
+};
