@@ -79,6 +79,7 @@ function renderMarkup() {
 
     const buttonDelet = document.querySelectorAll('.delete-element');
     buttonDelet.forEach(button => button.addEventListener('click', onButtonDeletetClick))
+
 }
 
 renderMarkup();
@@ -114,4 +115,61 @@ function onButtonDeletetClick(event) {
     localStorage.setItem('books', JSON.stringify(newData));
     ul.innerHTML = "";
     renderMarkup();
+};
+
+
+addBtn.addEventListener('click', onAddBtnClick);
+
+
+function createFormMarkup(){
+    return `<form><lable>Введите название книги<input name ="title"></lable>
+    <lable>Введите автора<input name ="author"></lable>
+    <lable>Вставьте ссылку на картинку<input name ="img"></lable>
+    <lable>Введите описание книги<input name ="plot"></lable>
+    <button class = 'btn-save'>Save</button>
+    </form>`
+};
+
+function formFunctionality(book) {
+    const input = document.querySelectorAll('input');
+    console.log(input);
+
+    input.forEach(element => element.addEventListener('change', onInputChange));
+
+    // btnSave.addEventListener('click', onBtnSaveClick);
+
+    function onInputChange(event) {
+        book[event.target.name] = event.target.value;
+        console.log(book);
+ };
+}
+
+
+function onAddBtnClick() {
+    const newBook = {
+        id: `${Date.now()}`,
+		title: "",
+		author: "",
+		img: "",
+		plot: "",
+    }
+
+    rightDiv.insertAdjacentHTML('beforeend', createFormMarkup());
+    formFunctionality(newBook);
+    const input = document.querySelectorAll('input');
+    const btnSave = document.querySelector('.btn-save');
+ 
+    btnSave.addEventListener('click', onBtnSaveClick);
+
+    function onBtnSaveClick(event) {
+        event.preventDefault();
+
+        input.forEach(element => {
+            if (element.value === "") {
+                alert("Заполните все поля!");
+            }
+        });
+    
+        localStorage.setItem('form-data', JSON.stringify(newBook))
+    };
 };
